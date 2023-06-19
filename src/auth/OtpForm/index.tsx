@@ -93,7 +93,6 @@ const OtpForm: React.FC<OtpFormProps> = (props) => {
     };
 
     const onSubmit = (event: React.FormEvent) => {
-        console.log('aliiiii');
         event.preventDefault();
         verifyOtpCode();
     };

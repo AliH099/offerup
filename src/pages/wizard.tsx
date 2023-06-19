@@ -1,14 +1,12 @@
 import { Stack } from '@mui/material';
 import { serverSideFetch } from 'helpers/http-request';
-import useStepWizard, { StepWizardProvider } from 'hooks/useStepWizard';
-import SiteLayout from 'layout/SiteLayout';
+import { StepWizardProvider } from 'hooks/useStepWizard';
 import { GetServerSidePropsContext } from 'next';
 import WizardPageContainer from 'page-containers/WizardPageContainer';
 import CreatePost from 'wizard/CreatePost';
 import Details from 'wizard/Details';
 import { Categories } from 'wizard/Details/types';
 import Price from 'wizard/Price';
-import WizardAction from 'wizard/WizardAction';
 import WizardHeader from 'wizard/WizardHeader';
 import { NextPageWithLayout } from './_app';
 
@@ -22,8 +20,6 @@ const WizardPage: NextPageWithLayout<WizardPage> = (props) => {
         1: <Details categories={props.categories} />,
         2: <Price />,
     };
-
-    console.log('aliiii', props.categories);
 
     return (
         <WizardPageContainer>
