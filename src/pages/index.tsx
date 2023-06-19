@@ -19,7 +19,6 @@ const Home: NextPageWithLayout<HomeProps> = (props) => {
     const { control, handleSubmit } = useForm<{ search: string }>();
 
     const onSubmit = () => {};
-    console.log(props.posts);
 
     return (
         <HomePageContainer>

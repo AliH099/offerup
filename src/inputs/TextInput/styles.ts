@@ -57,9 +57,6 @@ export const PureTextInput = styled(TextField)(({ theme }) => ({
         color: theme.palette.primary.main,
         boxShadow: 'none',
     },
-    // '& .MuiInput-underline:after': {
-    //     borderBottomColor: theme.palette.primary.main,
-    // },
     '& .MuiOutlinedInput-root': {
         borderRadius: '15px',
         '& fieldset': {
@@ -74,15 +71,7 @@ export const PureTextInput = styled(TextField)(({ theme }) => ({
             WebkitBoxShadow: '0 0 0 1000px white inset',
         },
     },
-    // input: {
-    //     height: '35px',
-    //     marginLeft: '10px',
-    // },
     '& .Mui-focused': {
-        // transition: theme.transitions.create(['border-color', 'box-shadow'], { duration: 0.7 }),
-        // borderRadius: '15px',
-        // boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 5px 0.2rem`,
-        // borderColor: theme.palette.primary.main,
         '&:hover fieldset': {
             borderColor: theme.palette.primary.main,
         },
