@@ -16,20 +16,21 @@ export type MetaData = {
 
 export interface WizardState {
     images: { source: string; id: number }[];
-    mainData: { title?: string; description?: string; price?: number };
-    metaData: MetaData[];
+    mainData: { title?: string; description?: string; category?: number };
+    metadata: MetaData[];
+    price?: number;
     addToImages: (images: string) => void;
     removeFromImages: (id: number) => void;
-    setMainData: (data: { title?: string; description?: string; price?: number }) => void;
+    setMainData: (data: { title?: string; description?: string; category?: number }) => void;
     setMetaData: (metaData: MetaData[]) => void;
+    setPrice: (price: number) => void;
 }
 
 const useWizardStore = create<WizardState>()(
     devtools((set, get) => ({
         images: [],
         mainData: {},
-        metaData: [],
-
+        metadata: [],
         addToImages: (image) => {
             set({ images: [...get().images, { source: image, id: new Date().valueOf() }] });
         },
@@ -41,7 +42,10 @@ const useWizardStore = create<WizardState>()(
             set({ ...get().images, mainData: { ...get().mainData, ...data } });
         },
         setMetaData: (metaData) => {
-            set({ ...get().images, ...get().mainData, metaData: metaData });
+            set({ ...get().images, ...get().mainData, metadata: metaData });
+        },
+        setPrice: (price) => {
+            set({ ...get(), price: price });
         },
     })),
 );

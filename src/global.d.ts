@@ -4,3 +4,5 @@ type List<T> = {
     count: number;
     results: T[];
 };
+
+type Param = string | number | boolean | readonly string[] | readonly number[] | readonly boolean[];

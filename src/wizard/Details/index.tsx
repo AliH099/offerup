@@ -8,52 +8,65 @@ import TextInput from 'inputs/TextInput';
 import useWizardStore from 'store/wizard';
 import useStepWizard from 'hooks/useStepWizard';
 import { Stack } from '@mui/material';
+import { useEffect } from 'react';
 
 const Details: React.FC<DetailsStepProps> = (props) => {
-    const { metaData, setMetaData } = useWizardStore();
+    const { metadata, setMetaData, setMainData, mainData } = useWizardStore();
     const { control, handleSubmit, watch } = useForm();
     const wizard = useStepWizard();
     const { data, loading } = useFetch<CategorySchema>(
-        `marketplace/category/schema/${watch('category') || 1}/`,
+        `marketplace/category/schema/${watch('category') || mainData.category}/`,
     );
 
-    const ali = { weight: true, height: false, race: false };
-
     const onSubmit = (values: any) => {
-        const { category, ...other } = values;
+        setMainData({ ...mainData, category: values.category });
         setMetaData(data?.fields.map((item) => ({ ...item, value: values[item.en_label] })) || []);
         wizard.next();
     };
 
+    useEffect(() => {
+        console.log(watch('category') !== undefined || mainData.category !== undefined);
+    }, [watch('category')]);
+
     return (
         <DetailsContainer>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <AutoComplete
-                    options={props.categories.map((item) => ({
-                        label: item.name,
-                        value: item.id,
-                    }))}
-                    name="category"
+                <Controller
                     control={control}
-                    label="category"
+                    rules={{
+                        required: 'لطفا دسته بندی را مشخص کنید',
+                    }}
+                    defaultValue={mainData.category}
+                    render={({ field }) => (
+                        <AutoComplete
+                            {...field}
+                            options={props.categories.map((item) => ({
+                                label: item.name,
+                                value: item.id,
+                            }))}
+                            name="category"
+                            control={control}
+                            label="category"
+                        />
+                    )}
+                    name="category"
                 />
+
                 <Stack className="schema-container">
-                    {watch('category') !== undefined &&
+                    {(watch('category') !== undefined || mainData.category !== undefined) &&
                         data?.fields.map((item, index) => (
                             <Controller
                                 key={item.fa_label}
                                 control={control}
                                 rules={{
                                     required:
-                                        metaData.find((meta) => meta.en_label === item.en_label)
-                                            ?.value === undefined &&
-                                        metaData.find((meta) => meta.en_label === item.en_label)
-                                            ?.is_required
+                                        metadata.find((meta) => meta.en_label === item.en_label)
+                                            ?.value === undefined && item.is_required
                                             ? 'این فیلد الزامی است'
                                             : false,
                                 }}
                                 defaultValue={
-                                    metaData.find((meta) => meta.en_label === item.en_label)?.value
+                                    metadata.find((meta) => meta.en_label === item.en_label)?.value
                                 }
                                 render={({ field }) => (
                                     <TextInput {...field} control={control} label={item.fa_label} />

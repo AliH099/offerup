@@ -9,6 +9,9 @@ import { Categories } from 'wizard/Details/types';
 import Price from 'wizard/Price';
 import WizardHeader from 'wizard/WizardHeader';
 import { NextPageWithLayout } from './_app';
+import EndStep from 'wizard/EndStep';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 interface WizardPage {
     categories: Categories[];
@@ -19,7 +22,13 @@ const WizardPage: NextPageWithLayout<WizardPage> = (props) => {
         0: <CreatePost />,
         1: <Details categories={props.categories} />,
         2: <Price />,
+        3: <EndStep />,
     };
+    const router = useRouter();
+
+    useEffect(() => {
+        console.log(window.location.search);
+    }, []);
 
     return (
         <WizardPageContainer>
