@@ -7,7 +7,7 @@ const BottomMenuItems = [
     { label: 'خانه', icon: <TripOriginIcon />, url: '/' },
     { label: 'صندوق ورودی', icon: <CommentIcon />, url: '/inbox' },
     { label: 'ایجاد آگهی', icon: <CameraAltIcon />, url: '/wizard' },
-    { label: 'فروش', icon: <SellIcon />, url: '/sell' },
+    { label: 'آگهی های من', icon: <SellIcon />, url: '/listing' },
 ];
 
 export default BottomMenuItems;

@@ -7,11 +7,11 @@ import CreatePost from 'wizard/CreatePost';
 import Details from 'wizard/Details';
 import { Categories } from 'wizard/Details/types';
 import Price from 'wizard/Price';
-import WizardHeader from 'wizard/WizardHeader';
 import { NextPageWithLayout } from './_app';
 import EndStep from 'wizard/EndStep';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { stepsTitle } from 'constant/wizard-steps';
+import SectionHeader from 'layout/SectionHeader';
 
 interface WizardPage {
     categories: Categories[];
@@ -26,17 +26,18 @@ const WizardPage: NextPageWithLayout<WizardPage> = (props) => {
     };
     const router = useRouter();
 
-    useEffect(() => {
-        console.log(window.location.search);
-    }, []);
-
     return (
         <WizardPageContainer>
             <StepWizardProvider stepsCount={4}>
                 {(value) => (
-                    <Stack>
-                        <WizardHeader />
-                        {steps[value.step]}
+                    <Stack height="100%">
+                        <SectionHeader
+                            title={stepsTitle[value.step]}
+                            onClickBack={() => value.prev()}
+                            onCancel={() => router.push('./')}
+                            hasCancel={true}
+                        />
+                        <Stack className="content">{steps[value.step]}</Stack>
                     </Stack>
                 )}
             </StepWizardProvider>
