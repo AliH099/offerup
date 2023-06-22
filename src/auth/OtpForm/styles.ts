@@ -1,6 +1,6 @@
 import { Box, Stack, styled } from '@mui/material';
 
-const OtpFormContainer = styled(Stack)(() => ({
+const OtpFormContainer = styled(Stack)(({ theme }) => ({
     padding: '10px',
     gap: '30px',
     '.title': {
@@ -32,7 +32,7 @@ const OtpFormContainer = styled(Stack)(() => ({
         direction: 'ltr',
     },
     '.helper-text': {
-        color: 'error.main',
+        color: theme.palette.error.main,
         lineHeight: '20px',
         alignSelf: 'flex-start',
         dir: 'ltr',

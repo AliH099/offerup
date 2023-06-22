@@ -4,3 +4,8 @@ export const decodeJWT = (token?: string) => {
     }
     return undefined;
 };
+
+// Convert persian number to english
+export const faNumberToEn = (s: string) => {
+    return s.replace(/[۰-۹]/g, (d) => String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)));
+};

@@ -9,6 +9,7 @@ const WizardActionContainer = styled(Stack)(() => ({
     gap: '5px',
     '.button': {
         paddingBlock: 5,
+        borderRadius: '100px',
     },
 }));
 

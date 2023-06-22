@@ -12,6 +12,12 @@ import { useForm } from 'react-hook-form';
 import { CreatePostFormInterface } from './types';
 import WizardAction from 'wizard/WizardAction';
 import useStepWizard from 'hooks/useStepWizard';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+const validationSchema = yup.object({
+    title: yup.string().required('لطفا عنوان آگهی را وارد نمایید'),
+});
 
 const CreatePost: React.FC = () => {
     const { images, addToImages, removeFromImages } = useWizardStore();
@@ -21,6 +27,7 @@ const CreatePost: React.FC = () => {
             description: mainData.description,
             title: mainData.title,
         },
+        resolver: yupResolver(validationSchema),
     });
     const wizard = useStepWizard();
 

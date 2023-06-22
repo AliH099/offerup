@@ -60,7 +60,7 @@ const PhoneNumberForm = () => {
                         placeholder="مثال: ۰۹۱۲۳۴۵۶۷۸۹"
                         control={control}
                         name="phone"
-                        helperText={error}
+                        helpertext={error}
                     />
                     <LoadingButton variant="contained" fullWidth type="submit" loading={loading}>
                         مرحله بعد

@@ -22,10 +22,12 @@ const ProductDetailPageContainer = styled(Stack)(() => ({
         zIndex: 2,
         height: '100%',
     },
-    '.back-button': {
+    '.back-button-link': {
         position: 'sticky',
         top: 0,
         left: 10,
+    },
+    '.back-button': {
         backgroundColor: grey[100],
         boxShadow: `0px 0px 70px ${grey[700]}`,
     },

@@ -1,9 +1,10 @@
 import { SwipeableDrawer, styled } from '@mui/material';
 
-const LoginDrawer = styled(SwipeableDrawer)(() => ({
+const Drawer = styled(SwipeableDrawer)(() => ({
     '.close-icon': {
         alignSelf: 'flex-end',
+        cursor: 'pointer',
     },
 }));
 
-export default LoginDrawer;
+export default Drawer;

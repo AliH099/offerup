@@ -2,18 +2,15 @@ import { IconButton, SwipeableDrawer, Typography } from '@mui/material';
 import HeaderContainer from './styles';
 import { useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
-import LoginModal from 'auth/LoginModal';
 import useUserData from 'hooks/useUserData';
 import LoginButton from 'auth/LoginButton';
+import LoginDrawer from 'auth/LoginDrawer';
 
 const Header = () => {
     const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-    const [open, setOpen] = useState<boolean>(false);
-    const { data: userData } = useUserData();
 
     return (
         <HeaderContainer>
-            <LoginModal open={open} setOpen={setOpen} />
             <IconButton color="primary" onClick={() => setOpenDrawer(true)} aria-label="menu">
                 <MenuIcon />
             </IconButton>

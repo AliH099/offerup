@@ -1,24 +1,29 @@
-import Button from 'inputs/Button';
 import WizardActionContainer from './styles';
 import CustomizedStepper from 'wizard/CustomizedStepper';
 import useStepWizard from 'hooks/useStepWizard';
-import { useState } from 'react';
 import { steps } from 'constant/wizard-steps';
+import { LoadingButton } from '@mui/lab';
 
-const WizardAction = () => {
+interface WizardActionProps {
+    buttonText?: string;
+    onClick?: () => void;
+    loading?: boolean;
+}
+
+const WizardAction: React.FC<WizardActionProps> = (props) => {
     const wizard = useStepWizard();
     return (
         <WizardActionContainer>
             <CustomizedStepper steps={steps} activeStep={wizard.step} />
-            <Button
+            <LoadingButton
                 variant="contained"
-                fullradius={1}
                 className="button"
                 type="submit"
-                // onClick={() => wizard.next()}
+                onClick={props.onClick}
+                loading={props.loading}
             >
-                مرحله بعد
-            </Button>
+                {props.buttonText || 'مرحله بعد'}
+            </LoadingButton>
         </WizardActionContainer>
     );
 };

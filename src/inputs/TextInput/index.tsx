@@ -44,7 +44,7 @@ const TextInput: React.FC<TextInputProps> = (props) => {
             />
 
             <FormHelperText className="helper-text">
-                {error?.message || props.helperText}
+                {error?.message || props.helpertext}
             </FormHelperText>
         </TextInputContainer>
     );

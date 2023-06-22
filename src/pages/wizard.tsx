@@ -1,16 +1,17 @@
 import { Stack } from '@mui/material';
 import { serverSideFetch } from 'helpers/http-request';
-import useStepWizard, { StepWizardProvider } from 'hooks/useStepWizard';
-import SiteLayout from 'layout/SiteLayout';
+import { StepWizardProvider } from 'hooks/useStepWizard';
 import { GetServerSidePropsContext } from 'next';
 import WizardPageContainer from 'page-containers/WizardPageContainer';
 import CreatePost from 'wizard/CreatePost';
 import Details from 'wizard/Details';
 import { Categories } from 'wizard/Details/types';
 import Price from 'wizard/Price';
-import WizardAction from 'wizard/WizardAction';
-import WizardHeader from 'wizard/WizardHeader';
 import { NextPageWithLayout } from './_app';
+import EndStep from 'wizard/EndStep';
+import { useRouter } from 'next/router';
+import { stepsTitle } from 'constant/wizard-steps';
+import SectionHeader from 'layout/SectionHeader';
 
 interface WizardPage {
     categories: Categories[];
@@ -21,17 +22,22 @@ const WizardPage: NextPageWithLayout<WizardPage> = (props) => {
         0: <CreatePost />,
         1: <Details categories={props.categories} />,
         2: <Price />,
+        3: <EndStep />,
     };
-
-    console.log('aliiii', props.categories);
+    const router = useRouter();
 
     return (
         <WizardPageContainer>
             <StepWizardProvider stepsCount={4}>
                 {(value) => (
-                    <Stack>
-                        <WizardHeader />
-                        {steps[value.step]}
+                    <Stack height="100%">
+                        <SectionHeader
+                            title={stepsTitle[value.step]}
+                            onClickBack={() => value.prev()}
+                            onCancel={() => router.push('./')}
+                            hasCancel={true}
+                        />
+                        <Stack className="content">{steps[value.step]}</Stack>
                     </Stack>
                 )}
             </StepWizardProvider>
