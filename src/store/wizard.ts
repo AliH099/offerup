@@ -15,15 +15,17 @@ export type MetaData = {
 };
 
 export interface WizardState {
-    images: { source: string; id: number }[];
+    images: { source: string; id: number; file: File }[];
     mainData: { title?: string; description?: string; category?: number };
     metadata: MetaData[];
     price?: number;
-    addToImages: (images: string) => void;
+    postID?: number;
+    addToImages: (images: string, file: File) => void;
     removeFromImages: (id: number) => void;
     setMainData: (data: { title?: string; description?: string; category?: number }) => void;
     setMetaData: (metaData: MetaData[]) => void;
     setPrice: (price: number) => void;
+    setPostID: (id: number) => void;
 }
 
 const useWizardStore = create<WizardState>()(
@@ -31,21 +33,26 @@ const useWizardStore = create<WizardState>()(
         images: [],
         mainData: {},
         metadata: [],
-        addToImages: (image) => {
-            set({ images: [...get().images, { source: image, id: new Date().valueOf() }] });
+        addToImages: (image: string, file: File) => {
+            set({
+                images: [...get().images, { source: image, id: new Date().valueOf(), file: file }],
+            });
         },
 
         removeFromImages: (id) => {
             set({ images: get().images.filter((image) => image.id !== id) });
         },
         setMainData: (data) => {
-            set({ ...get().images, mainData: { ...get().mainData, ...data } });
+            set({ ...get(), mainData: { ...get().mainData, ...data } });
         },
         setMetaData: (metaData) => {
-            set({ ...get().images, ...get().mainData, metadata: metaData });
+            set({ ...get(), metadata: metaData });
         },
         setPrice: (price) => {
             set({ ...get(), price: price });
+        },
+        setPostID(id) {
+            set({ ...get(), postID: id });
         },
     })),
 );

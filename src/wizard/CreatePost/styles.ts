@@ -13,18 +13,7 @@ const CreatePostContainer = styled(Stack)(({ theme }) => ({
             objectFit: 'cover',
         },
     },
-    '.image-wrapper': {
-        position: 'relative',
-    },
-    '.remove-icon-button': {
-        position: 'absolute',
-        top: -7,
-        left: -7,
-        backgroundColor: theme.palette.error.main,
-        color: grey[100],
-        padding: 3,
-    },
-    '.remove-icon': { fontSize: '20px' },
+
     '.add-photo': {
         marginInline: 'auto',
         border: '1px solid',

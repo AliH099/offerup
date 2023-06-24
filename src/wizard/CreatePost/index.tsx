@@ -1,12 +1,10 @@
-import { IconButton, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import CreatePostContainer from './styles';
 import AddIcon from '@mui/icons-material/Add';
 import TextInput from 'inputs/TextInput';
 import Button from 'inputs/Button';
-import Image from 'next/image';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import DeleteIcon from '@mui/icons-material/Delete';
 import useWizardStore from 'store/wizard';
 import { useForm } from 'react-hook-form';
 import { CreatePostFormInterface } from './types';
@@ -14,14 +12,18 @@ import WizardAction from 'wizard/WizardAction';
 import useStepWizard from 'hooks/useStepWizard';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import UploadedImage from 'data-display/UploadedImage';
+import { useEffect } from 'react';
+import httpRequest, { catchRequestError } from 'helpers/http-request';
 
 const validationSchema = yup.object({
     title: yup.string().required('لطفا عنوان آگهی را وارد نمایید'),
 });
 
 const CreatePost: React.FC = () => {
-    const { images, addToImages, removeFromImages } = useWizardStore();
-    const { mainData, setMainData } = useWizardStore();
+    const { images, addToImages, removeFromImages, mainData, setMainData, setPostID } =
+        useWizardStore();
+    const wizard = useStepWizard();
     const { control, handleSubmit } = useForm<CreatePostFormInterface>({
         defaultValues: {
             description: mainData.description,
@@ -29,14 +31,13 @@ const CreatePost: React.FC = () => {
         },
         resolver: yupResolver(validationSchema),
     });
-    const wizard = useStepWizard();
 
     const handleCapture = (target: EventTarget & HTMLInputElement) => {
         if (target.files) {
             if (target.files.length !== 0) {
                 const file = target.files[0];
                 const newUrl = URL.createObjectURL(file);
-                addToImages(newUrl);
+                addToImages(newUrl, file);
             }
         }
     };
@@ -59,6 +60,16 @@ const CreatePost: React.FC = () => {
     const removeImage = (id: number) => {
         removeFromImages(id);
     };
+
+    useEffect(() => {
+        httpRequest<{ id: number }>('marketplace/post/temp/', 'POST')
+            .then((res) => {
+                setPostID(res.data.id);
+            })
+            .catch((err) => {
+                catchRequestError(err, true);
+            });
+    }, []);
 
     return (
         <CreatePostContainer>
@@ -105,21 +116,13 @@ const CreatePost: React.FC = () => {
                     </Stack>
                 )}
                 {images.map((item, index) => (
-                    <Stack key={index} className="image-wrapper">
-                        <IconButton
-                            className="remove-icon-button"
-                            onClick={() => removeImage(item.id)}
-                        >
-                            <DeleteIcon className="remove-icon" />
-                        </IconButton>
-                        <Image
-                            height={170}
-                            width={170}
-                            src={item.source}
-                            alt={`${index}th image`}
-                            className="image"
-                        />
-                    </Stack>
+                    <UploadedImage
+                        {...item}
+                        key={index}
+                        postID={1}
+                        isThumbnail={index === 0}
+                        onRemoveImage={removeImage}
+                    />
                 ))}
             </Stack>
             <form onSubmit={handleSubmit(onSubmit)}>

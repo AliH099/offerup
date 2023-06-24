@@ -28,7 +28,6 @@ const Home: NextPageWithLayout<HomeProps> = (props) => {
     });
     const { setParam, resetParam, paramsArray, statparam } = useQueryParam<string>('search');
     const { data, loading } = useFetch<List<Post>>(`marketplace/post/?${statparam.toString()}`);
-    const router = useRouter();
     const onSubmit = async (values: { search?: string }) => {
         values.search && setParam(values.search);
     };
