@@ -1,4 +1,4 @@
 export interface CreatePostFormInterface {
     title: string;
-    description: string;
+    description?: string;
 }

@@ -14,7 +14,7 @@ const ProductDetail = () => {
     return (
         <ProductDetailPageContainer>
             <Stack className="back-button-container">
-                <Link href="../">
+                <Link href="../" className="back-button-link">
                     <IconButton className="back-button">
                         <ArrowForwardIcon color="primary" />
                     </IconButton>
@@ -68,7 +68,7 @@ const ProductDetail = () => {
                     {hiddenTextOverflow ? 'بیشتر' : 'بستن'}
                 </MuiLink>
             </Stack>
-            <ProductAction />
+            <ProductAction postID={2} />
         </ProductDetailPageContainer>
     );
 };

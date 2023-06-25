@@ -11,7 +11,7 @@ const BottomMainMenuItem: React.FC<BottomMainMenuItemProps> = (props) => {
     return (
         <BottomMainMenuItemContainer active={props.active ? +props.active : undefined}>
             {props.icon}
-            <Typography>{props.label}</Typography>
+            <Typography variant="body2">{props.label}</Typography>
         </BottomMainMenuItemContainer>
     );
 };

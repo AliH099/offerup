@@ -1,40 +1,80 @@
 import DetailsContainer from './styles';
 import AutoComplete from 'inputs/AutoComplete';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import WizardAction from 'wizard/WizardAction';
 import { CategorySchema, DetailsStepProps } from './types';
 import useFetch from 'hooks/useFetch';
-import { useEffect } from 'react';
 import TextInput from 'inputs/TextInput';
+import useWizardStore from 'store/wizard';
+import useStepWizard from 'hooks/useStepWizard';
+import { Stack } from '@mui/material';
+import { useEffect } from 'react';
 
 const Details: React.FC<DetailsStepProps> = (props) => {
+    const { metadata, setMetaData, setMainData, mainData } = useWizardStore();
     const { control, handleSubmit, watch } = useForm();
+    const wizard = useStepWizard();
     const { data, loading } = useFetch<CategorySchema>(
-        `marketplace/category/schema/${watch('category') || 1}/`,
+        `marketplace/category/schema/${watch('category') || mainData.category}/`,
     );
 
     const onSubmit = (values: any) => {
-        const { category, ...other } = values;
-        console.log(other);
+        setMainData({ ...mainData, category: values.category });
+        setMetaData(data?.fields.map((item) => ({ ...item, value: values[item.en_label] })) || []);
+        wizard.next();
     };
 
     useEffect(() => {
-        console.log(watch('category'));
+        console.log(watch('category') !== undefined || mainData.category !== undefined);
     }, [watch('category')]);
 
     return (
         <DetailsContainer>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <AutoComplete
-                    options={props.categories.map((item) => ({ label: item.name, value: item.id }))}
-                    name="category"
+                <Controller
                     control={control}
-                    label="category"
+                    rules={{
+                        required: 'لطفا دسته بندی را مشخص کنید',
+                    }}
+                    defaultValue={mainData.category}
+                    render={({ field }) => (
+                        <AutoComplete
+                            {...field}
+                            options={props.categories.map((item) => ({
+                                label: item.name,
+                                value: item.id,
+                            }))}
+                            name="category"
+                            control={control}
+                            label="category"
+                        />
+                    )}
+                    name="category"
                 />
-                {watch('category') !== undefined &&
-                    data?.fields.map((item, index) => (
-                        <TextInput control={control} name={item.en_label} label={item.fa_label} />
-                    ))}
+
+                <Stack className="schema-container">
+                    {(watch('category') !== undefined || mainData.category !== undefined) &&
+                        data?.fields.map((item, index) => (
+                            <Controller
+                                key={item.fa_label}
+                                control={control}
+                                rules={{
+                                    required:
+                                        metadata.find((meta) => meta.en_label === item.en_label)
+                                            ?.value === undefined && item.is_required
+                                            ? 'این فیلد الزامی است'
+                                            : false,
+                                }}
+                                defaultValue={
+                                    metadata.find((meta) => meta.en_label === item.en_label)?.value
+                                }
+                                render={({ field }) => (
+                                    <TextInput {...field} control={control} label={item.fa_label} />
+                                )}
+                                name={item.en_label}
+                            />
+                        ))}
+                </Stack>
                 <WizardAction />
             </form>
         </DetailsContainer>

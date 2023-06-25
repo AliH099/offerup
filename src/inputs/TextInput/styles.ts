@@ -1,4 +1,4 @@
-import { FormControl, FormControlProps } from '@mui/material';
+import { FormControl, FormControlProps, TextField } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { styled } from '@mui/system';
 
@@ -51,3 +51,35 @@ const TextInputContainer = styled(FormControl)<FormControlProps>(({ theme }) => 
 }));
 
 export default TextInputContainer;
+
+export const PureTextInput = styled(TextField)(({ theme }) => ({
+    '& label.Mui-focused': {
+        color: theme.palette.primary.main,
+        boxShadow: 'none',
+    },
+    '& .MuiOutlinedInput-root': {
+        borderRadius: '15px',
+        '& fieldset': {
+            borderColor: theme.palette.primary[500],
+        },
+        '&:hover fieldset': {
+            borderColor: 'black',
+        },
+        '& .MuiInputBase-input:-webkit-autofill': {
+            borderRadius: '15px',
+            WebkitTextFillColor: 'black',
+            WebkitBoxShadow: '0 0 0 1000px white inset',
+        },
+    },
+    '& .Mui-focused': {
+        '&:hover fieldset': {
+            borderColor: theme.palette.primary.main,
+        },
+    },
+    '& .Mui-disabled': {
+        '&:hover fieldset': {
+            borderColor: theme.palette.grey[400],
+            borderWidth: '1px',
+        },
+    },
+}));

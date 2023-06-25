@@ -10,5 +10,5 @@ export interface TextInputProps extends Omit<InputBaseProps, 'sx' | 'name'> {
      * @default false
      */
     disableChange?: boolean;
-    helperText?: string;
+    helpertext?: string;
 }

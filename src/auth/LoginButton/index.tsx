@@ -1,14 +1,14 @@
-import { Button, ButtonProps, Fade, Paper, Popper, Stack, Typography } from '@mui/material';
+import { Button, Fade, Paper, Popper, Stack, Typography } from '@mui/material';
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import useUserData from 'hooks/useUserData';
 import LoginIcon from '@mui/icons-material/Login';
 import useOnClickOutside from 'hooks/useOnClickOutside';
 import { useRouter } from 'next/router';
 import { getToken, removeToken } from 'helpers/auth';
-import LoginModal from 'auth/LoginModal';
+import LoginDrawer from 'auth/LoginDrawer';
 import LoginButtonContainer from './styles';
 
-const LoginButton: React.FC<ButtonProps> = (props) => {
+const LoginButton = () => {
     const router = useRouter();
     const { reset } = useUserData();
     const [open, setOpen] = useState<boolean>(false);
@@ -45,7 +45,7 @@ const LoginButton: React.FC<ButtonProps> = (props) => {
 
     return (
         <Fragment>
-            {getToken() === null && <LoginModal open={open} setOpen={setOpen} />}
+            {getToken() === null && <LoginDrawer open={open} setOpen={setOpen} />}
             {ready === true && userData?.user_id ? (
                 <Stack onClick={handlePopper}>
                     <Button sx={{ position: 'relative' }} variant="contained">
