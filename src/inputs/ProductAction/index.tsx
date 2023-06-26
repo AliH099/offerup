@@ -7,9 +7,11 @@ import { ProductActionProps } from './types';
 import httpRequest, { catchRequestError } from 'helpers/http-request';
 import { toast } from 'react-toastify';
 import Typography from '@mui/material/Typography';
+import ChatWrapper from 'chat/ChatWrapper';
 
 const ProductAction: React.FC<ProductActionProps> = (props) => {
     const [open, setOpen] = useState<boolean>(false);
+    const [openChat, setOpenChat] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
 
     const onSubmit = (values: { price: number }) => {
@@ -35,7 +37,12 @@ const ProductAction: React.FC<ProductActionProps> = (props) => {
                 <PriceForm onSubmit={onSubmit} variant={PriceVariant.offer} loading={loading} />
             </FullScreenDrawer>
 
-            <Button fullradius={1} variant="outlined" fullWidth>
+            <FullScreenDrawer open={openChat} setOpen={setOpenChat}>
+                <ChatWrapper phone="09187004197">
+                    <Typography>hello</Typography>
+                </ChatWrapper>
+            </FullScreenDrawer>
+            <Button fullradius={1} variant="outlined" fullWidth onClick={() => setOpenChat(true)}>
                 درخواست
             </Button>
             <Button fullradius={1} fullWidth variant="contained" onClick={() => setOpen(true)}>
