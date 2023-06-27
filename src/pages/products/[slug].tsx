@@ -1,17 +1,17 @@
-import SiteLayout from 'layout/SiteLayout';
-import { Avatar, Divider, IconButton, Link as MuiLink, Stack, Typography } from '@mui/material';
-import ProductDetailPageContainer from 'page-containers/ProductDetailPageContainer';
-import ProductAction from 'inputs/ProductAction';
-import Gallery from 'data-display/Gallery/Gallery';
-import { useState } from 'react';
-import textOverflowStyle from 'helpers/text-overflow-style';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Link from 'next/link';
+import { Avatar, Divider, IconButton, Link as MuiLink, Stack, Typography } from '@mui/material';
+import Gallery from 'data-display/Gallery/Gallery';
+import calcInterval from 'helpers/calc-interval';
 import { serverSideFetch } from 'helpers/http-request';
+import textOverflowStyle from 'helpers/text-overflow-style';
+import ProductAction from 'inputs/ProductAction';
+import SiteLayout from 'layout/SiteLayout';
 import { GetServerSidePropsContext } from 'next';
+import Link from 'next/link';
+import ProductDetailPageContainer from 'page-containers/ProductDetailPageContainer';
 import { PostDetail } from 'page-containers/ProductDetailPageContainer/types';
 import { NextPageWithLayout } from 'pages/_app';
-import moment from 'moment-jalaali';
+import { useState } from 'react';
 
 interface ProductDetailProps {
     details: PostDetail;
@@ -21,6 +21,7 @@ const ProductDetail: NextPageWithLayout<ProductDetailProps> = (props) => {
     const [hiddenTextOverflow, setHiddenTextOverflow] = useState<boolean>(true);
     const { metadata, post_images, price, title, user, category, updated_at, description, id } =
         props.details;
+
     return (
         <ProductDetailPageContainer>
             <Stack className="back-button-container">
@@ -36,7 +37,7 @@ const ProductDetail: NextPageWithLayout<ProductDetailProps> = (props) => {
                 <Typography variant="h5">{price.toLocaleString() + ' تومان'}</Typography>
                 <Typography variant="body2" className="two-phrase">
                     <span>آخرین ویرایش:</span>
-                    <span>{moment(updated_at).format('HH:mm jYYYY/jMM/jDD')}</span>
+                    <span>{calcInterval(updated_at)}</span>
                 </Typography>
                 <Typography variant="body2">دسته بندی {category}</Typography>
                 <Divider />

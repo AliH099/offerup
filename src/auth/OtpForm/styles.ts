@@ -1,4 +1,4 @@
-import { Box, Stack, styled } from '@mui/material';
+import { Stack, styled } from '@mui/material';
 
 const OtpFormContainer = styled(Stack)(({ theme }) => ({
     padding: '10px',

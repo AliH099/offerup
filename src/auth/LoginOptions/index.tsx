@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
 import LoginOptionsContainer from './styles';
 
 interface LoginOptionsProps {
