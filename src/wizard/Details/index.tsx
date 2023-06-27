@@ -7,7 +7,7 @@ import useFetch from 'hooks/useFetch';
 import TextInput from 'inputs/TextInput';
 import useWizardStore from 'store/wizard';
 import useStepWizard from 'hooks/useStepWizard';
-import { Stack } from '@mui/material';
+import { CircularProgress, Stack } from '@mui/material';
 import { useEffect } from 'react';
 
 const Details: React.FC<DetailsStepProps> = (props) => {
@@ -54,6 +54,11 @@ const Details: React.FC<DetailsStepProps> = (props) => {
 
                 <Stack className="schema-container">
                     {(watch('category') !== undefined || mainData.category !== undefined) &&
+                    loading ? (
+                        <Stack alignItems="center">
+                            <CircularProgress />
+                        </Stack>
+                    ) : (
                         data?.fields.map((item, index) => (
                             <Controller
                                 key={item.fa_label}
@@ -73,7 +78,8 @@ const Details: React.FC<DetailsStepProps> = (props) => {
                                 )}
                                 name={item.en_label}
                             />
-                        ))}
+                        ))
+                    )}
                 </Stack>
                 <WizardAction />
             </form>

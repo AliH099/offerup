@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab';
 import { Button, Stack, SwipeableDrawer, Typography } from '@mui/material';
 import * as React from 'react';
 
@@ -9,6 +10,7 @@ interface WarningDrawerProps {
     warningText?: string;
     acceptText?: string;
     rejectText?: string;
+    acceptLoading?: boolean;
 }
 
 const WarningDrawer: React.FunctionComponent<WarningDrawerProps> = (props) => {
@@ -32,9 +34,14 @@ const WarningDrawer: React.FunctionComponent<WarningDrawerProps> = (props) => {
         >
             <Typography variant="body1">{props.warningText}</Typography>
             <Stack direction="row" width="100%" gap="10px">
-                <Button variant="contained" fullWidth onClick={props.onAccept}>
+                <LoadingButton
+                    variant="contained"
+                    fullWidth
+                    onClick={props.onAccept}
+                    loading={props.acceptLoading}
+                >
                     {props.acceptText}
-                </Button>
+                </LoadingButton>
                 <Button variant="outlined" fullWidth onClick={props.onReject}>
                     {props.rejectText}
                 </Button>

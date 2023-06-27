@@ -7,10 +7,20 @@ import { useState } from 'react';
 import textOverflowStyle from 'helpers/text-overflow-style';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Link from 'next/link';
+import { serverSideFetch } from 'helpers/http-request';
+import { GetServerSidePropsContext } from 'next';
+import { PostDetail } from 'page-containers/ProductDetailPageContainer/types';
+import { NextPageWithLayout } from 'pages/_app';
+import moment from 'moment-jalaali';
 
-const ProductDetail = () => {
-    const price = 25000000;
+interface ProductDetailProps {
+    details: PostDetail;
+}
+
+const ProductDetail: NextPageWithLayout<ProductDetailProps> = (props) => {
     const [hiddenTextOverflow, setHiddenTextOverflow] = useState<boolean>(true);
+    const { metadata, post_images, price, title, user, category, updated_at, description, id } =
+        props.details;
     return (
         <ProductDetailPageContainer>
             <Stack className="back-button-container">
@@ -20,29 +30,20 @@ const ProductDetail = () => {
                     </IconButton>
                 </Link>
             </Stack>
-            <Gallery
-                imagesPaths={[...Array(4)].map(
-                    (_, index) => `https://picsum.photos/id/${index}/400/400`,
-                )}
-            />
+            <Gallery imagesPaths={post_images} />
             <Stack className="content">
-                <Typography variant="h4">یک دستگاه آدامس جویده شده</Typography>
+                <Typography variant="h4">{title}</Typography>
                 <Typography variant="h5">{price.toLocaleString() + ' تومان'}</Typography>
                 <Typography variant="body2" className="two-phrase">
                     <span>آخرین ویرایش:</span>
-                    <span>دیروز</span>
+                    <span>{moment(updated_at).format('HH:mm jYYYY/jMM/jDD')}</span>
                 </Typography>
-                <Typography variant="body2" className="two-phrase">
-                    <span>شرایط:</span>
-                    <span>پوسیده در حد نو</span>
-                </Typography>
-                <Typography variant="body2">عتیقه های گران قیمت</Typography>
+                <Typography variant="body2">دسته بندی {category}</Typography>
                 <Divider />
                 <Stack direction="row" gap="15px">
                     <Avatar />
-                    <Stack>
-                        <Typography>الکس فرگوسن</Typography>
-                        <Typography>عضویت از ۲۰ فروردین ۱۲۰۷</Typography>
+                    <Stack justifyContent="center">
+                        <Typography>{user}</Typography>
                     </Stack>
                 </Stack>
                 <Divider />
@@ -51,26 +52,50 @@ const ProductDetail = () => {
                     variant="body2"
                     style={hiddenTextOverflow ? textOverflowStyle() : undefined}
                 >
-                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
-                    گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و
-                    برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای
-                    کاربردی می باشد. کتابهای زیادی در شصت و سه درصد گذشته، حال و آینده شناخت فراوان
-                    جامعه و متخصصان را می طلبد تا با نرم افزارها شناخت بیشتری را برای طراحان رایانه
-                    ای علی الخصوص طراحان خلاقی و فرهنگ پیشرو در زبان فارسی ایجاد کرد. در این صورت می
-                    توان امید داشت که تمام و دشواری موجود در ارائه راهکارها و شرایط سخت تایپ به
-                    پایان رسد وزمان مورد نیاز شامل حروفچینی دستاوردهای اصلی و جوابگوی سوالات پیوسته
-                    اهل دنیای موجود طراحی اساسا مورد استفاده قرار گیرد.
+                    {description}
                 </Typography>
-                <MuiLink
-                    onClick={() => setHiddenTextOverflow((prev) => !prev)}
-                    className="link-button"
-                >
-                    {hiddenTextOverflow ? 'بیشتر' : 'بستن'}
-                </MuiLink>
+
+                {description !== null ? (
+                    <MuiLink
+                        onClick={() => setHiddenTextOverflow((prev) => !prev)}
+                        className="link-button"
+                    >
+                        {hiddenTextOverflow ? 'بیشتر' : 'بستن'}
+                    </MuiLink>
+                ) : (
+                    <Typography variant="body2" color="grey">
+                        این کالا توضیحاتی ندارد
+                    </Typography>
+                )}
+                <Divider />
+                <Typography variant="h5">مشخصات کالا</Typography>
+                {metadata.map((item, index) => (
+                    <Stack direction="row" justifyContent="space-between">
+                        <Typography variant="body2" className="metadata-label">
+                            {item.fa_label}
+                        </Typography>
+                        <Typography variant="body1" className="metadata-value">
+                            {item.value}
+                        </Typography>
+                    </Stack>
+                ))}
             </Stack>
-            <ProductAction postID={2} />
+            <ProductAction postID={id} />
         </ProductDetailPageContainer>
     );
+};
+
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+    const details = await serverSideFetch<PostDetail>(
+        context,
+        `marketplace/post/${context.query.slug}`,
+    );
+
+    return {
+        props: {
+            details: details.props.data ? details.props.data : null,
+        },
+    };
 };
 
 ProductDetail.getLayout = function getLayout(page: React.ReactElement) {

@@ -21,7 +21,7 @@ const validationSchema = yup.object({
 });
 
 const CreatePost: React.FC = () => {
-    const { images, addToImages, removeFromImages, mainData, setMainData, setPostID } =
+    const { images, addToImages, removeFromImages, mainData, setMainData, setPostID, postID } =
         useWizardStore();
     const wizard = useStepWizard();
     const { control, handleSubmit } = useForm<CreatePostFormInterface>({
@@ -119,7 +119,7 @@ const CreatePost: React.FC = () => {
                     <UploadedImage
                         {...item}
                         key={index}
-                        postID={1}
+                        postID={postID || 1}
                         isThumbnail={index === 0}
                         onRemoveImage={removeImage}
                     />

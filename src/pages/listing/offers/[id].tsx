@@ -1,34 +1,60 @@
-import { Box, Stack, Typography, Button, Divider, Paper, SwipeableDrawer } from '@mui/material';
+import { Stack, Typography, Paper } from '@mui/material';
 import Image from 'next/image';
-import ListingPageContainer from 'page-containers/ListingPageContainer';
 import SectionHeader from 'layout/SectionHeader';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
-import Link from 'next/link';
 import OffersPageContainer from 'page-containers/OffersPageContainer';
 import { useState } from 'react';
 import WarningDrawer from 'inputs/WarningDrawer';
+import useFetch from 'hooks/useFetch';
+import httpRequest, { catchRequestError } from 'helpers/http-request';
+import { toast } from 'react-toastify';
+import { OfferDetails } from 'page-containers/OffersPageContainer/types';
+import ReceivedOffer from 'data-display/ReceivedOffer';
+import OfferReceivedSkeleton from 'skeletons/OfferReceivedSkeleton';
 
-interface OffersPageProps {}
-
-const OffersPage: NextPageWithLayout<OffersPageProps> = (props) => {
+const OffersPage: NextPageWithLayout = () => {
     const router = useRouter();
     const [open, setOpen] = useState<boolean>(false);
     const [selectedOfferId, setSelectedOfferId] = useState<number>();
+    const [selectedProposingUser, setSelectedProposingUser] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const onOfferTap = (offerId: number) => {
+    const { data, loading: dataLoading } = useFetch<OfferDetails[]>(
+        `marketplace/offer/received/${router.query.id}/`,
+    );
+    const onOfferTap = (offerId: number, proposingUser: string) => {
         setSelectedOfferId(offerId);
+        setSelectedProposingUser(proposingUser);
         setOpen(true);
+    };
+
+    const acceptOffer = () => {
+        setLoading(true);
+        httpRequest<Response>(`marketplace/offer/accept/${selectedOfferId}/`, 'GET')
+            .then((res) => {
+                toast.success('شما پیشنهاد را با موفقیت پذیرفتید');
+            })
+            .catch((err) => {
+                catchRequestError(err, true);
+            })
+            .finally(() => {
+                setLoading(false);
+                setOpen(false);
+            });
     };
 
     return (
         <OffersPageContainer>
             <WarningDrawer
-                warningText="آیا از پذیرفتن پیشنهاد اول مطمئن هستید؟"
+                warningText={`آیا از پذیرفتن پیشنهاد ${selectedProposingUser} مطمئن هستید؟`}
                 open={open}
                 setOpen={setOpen}
                 onReject={() => setOpen(false)}
-                onAccept={() => {}}
+                onAccept={() => {
+                    acceptOffer();
+                }}
+                acceptLoading={loading}
             />
             <SectionHeader title="پیشنهاد ها" onClickBack={() => router.push('../')} />
             <Stack className="content">
@@ -41,25 +67,20 @@ const OffersPage: NextPageWithLayout<OffersPageProps> = (props) => {
                     </Stack>
                     <Image src="/images/test.jpg" width={100} height={100} alt="image" />
                 </Paper>
-                <Typography variant="body1" color="primary">
-                    برای پذیرفتن پیشنهاد بر روی آن ضربه بزنید
-                </Typography>
-                {[...Array(4)].map((_, index) => (
-                    <Paper
-                        variant="outlined"
-                        className="offer"
-                        key={index}
-                        onClick={() => onOfferTap(1)}
-                    >
-                        <Stack className="offer-info">
-                            <Stack>
-                                <Typography variant="body2">حسن بقال</Typography>
-                                <Typography variant="body2">سه هفته پیش</Typography>
-                            </Stack>
-                            <Typography variant="h6">25000000</Typography>
-                        </Stack>
-                    </Paper>
-                ))}
+                {dataLoading ? (
+                    [...Array(7)].map(() => <OfferReceivedSkeleton />)
+                ) : (
+                    <Stack gap="10px">
+                        <Typography variant="body1" color="primary">
+                            {data?.length === 0 || !data
+                                ? 'شما برای این آگهی هنوز هیچ پیشنهادی دریافت نکرده اید'
+                                : 'برای پذیرفتن پیشنهاد بر روی آن ضربه بزنید'}
+                        </Typography>
+                        {data?.map((item, index) => (
+                            <ReceivedOffer key={index} onClick={onOfferTap} {...item} />
+                        ))}
+                    </Stack>
+                )}
             </Stack>
         </OffersPageContainer>
     );
