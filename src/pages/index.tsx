@@ -6,15 +6,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Grid, Stack } from '@mui/material';
 import Post from 'data-display/Post';
 import Link from 'next/link';
-import { Form, useForm } from 'react-hook-form';
-import { serverSideFetch } from 'helpers/http-request';
-import { GetServerSidePropsContext } from 'next';
+import { useForm } from 'react-hook-form';
 import { NextPageWithLayout } from './_app';
 import useQueryParam from 'hooks/useQueryParam';
 import useFetch from 'hooks/useFetch';
 import CloseIcon from '@mui/icons-material/Close';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
 import Skeleton from 'skeletons/Skeleton';
 
 interface HomeProps {}
