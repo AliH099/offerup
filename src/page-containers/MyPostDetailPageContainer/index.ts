@@ -1,7 +1,7 @@
 import { Stack, styled } from '@mui/material';
 import { grey } from '@mui/material/colors';
 
-const ProductDetailPageContainer = styled(Stack)(({ theme }) => ({
+const MyPostDetailPageContainer = styled(Stack)(({ theme }) => ({
     position: 'relative',
     paddingBottom: '100px',
     '.content': {
@@ -47,4 +47,5 @@ const ProductDetailPageContainer = styled(Stack)(({ theme }) => ({
         padding: '20px 0',
     },
 }));
-export default ProductDetailPageContainer;
+
+export default MyPostDetailPageContainer;

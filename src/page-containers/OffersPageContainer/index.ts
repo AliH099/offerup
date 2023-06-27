@@ -15,21 +15,6 @@ const OffersPageContainer = styled(Stack)(({ theme }) => ({
         alignItems: 'center',
         marginBottom: '20px',
     },
-    '.offer': {
-        padding: '10px',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '10px',
-        ':active': {
-            backgroundColor: theme.palette.primary.light,
-            borderColor: theme.palette.primary.main,
-        },
-    },
-    '.offer-info': {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
 }));
 
 export default OffersPageContainer;
