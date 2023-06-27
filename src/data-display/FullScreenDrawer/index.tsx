@@ -17,6 +17,9 @@ const FullScreenDrawer: React.FunctionComponent<FullScreenDrawerProps> = (props)
             onOpen={() => {}}
             anchor="bottom"
             dir="rtl"
+            ModalProps={{
+                keepMounted: false,
+            }}
             PaperProps={{
                 sx: {
                     borderRadius: '15px 15px 0px 0px',
