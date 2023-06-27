@@ -5,6 +5,7 @@ const DetailsContainer = styled(Stack)(({}) => ({
     paddingTop: '30px',
     '.schema-container': {
         paddingTop: '10px',
+        height: '100%',
     },
 }));
 
