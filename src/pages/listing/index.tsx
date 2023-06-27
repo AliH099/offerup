@@ -29,7 +29,7 @@ const ListingPage: NextPageWithLayout = (props) => {
                     data?.map((item, index) => (
                         <Paper className="post" variant="outlined" key={index}>
                             <Image
-                                src={item.post_images[0]?.url || '/images/test.jpg'}
+                                src={item.post_images.find((item) => item.is_thumbnail)?.url || ''}
                                 width={100}
                                 height={100}
                                 alt="image"
@@ -53,7 +53,9 @@ const ListingPage: NextPageWithLayout = (props) => {
                                 </Button>
 
                                 <Button variant="outlined" color="primary">
-                                    <Link href={`/listing/offers/${31}`}>لیست پیشنهادها</Link>
+                                    <Link href={`/listing/offers/${item.slug}`}>
+                                        لیست پیشنهادها
+                                    </Link>
                                 </Button>
                             </Stack>
                             <Divider />
