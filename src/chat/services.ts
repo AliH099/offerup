@@ -45,36 +45,24 @@ const useChat = (phone: string) => {
                     ]);
                     break;
                 case 'meta':
-                    const users = msg.meta.sub;
-                    const result = users ? users.find((user: any) => user.topic === userID) : undefined;
-                    if (users !== undefined && result) {
-                        sendJsonMessage({
-                            sub: {
-                                id: Date.now().toString(),
-                                topic: userID,
-                                get: {
-                                    data: {
-                                        limit: 24,
-                                    },
-                                    sub: {
-                                        ims: result.updated,
-                                    },
-                                    desc: {
-                                        ims: result.updated,
-                                    },
-                                    what: 'data sub desc del',
-                                },
-                            },
-                        });
-                    } else {
-                        sendJsonMessage({
+                    sendJsonMessage({
+                        sub: {
+                            id: Date.now().toString(),
+                            topic: userID,
                             get: {
-                                id: Date.now().toString(),
-                                topic: userID,
-                                what: 'desc sub',
+                                data: {
+                                    limit: 24,
+                                },
+                                sub: {
+                                    ims: new Date().toISOString(),
+                                },
+                                desc: {
+                                    ims: new Date().toISOString(),
+                                },
+                                what: 'data sub desc del',
                             },
-                        });
-                    }
+                        },
+                    });
                     break;
             }
         },
@@ -136,14 +124,6 @@ const useChat = (phone: string) => {
 
     const newMessage = (text: string) => {
         const timestamp = new Date().toISOString();
-        setMessages((prev) => [
-            ...prev,
-            {
-                content: text,
-                sent: true,
-                timestamp: timestamp,
-            },
-        ]);
 
         sendJsonMessage({
             pub: {
@@ -153,6 +133,15 @@ const useChat = (phone: string) => {
                 content: text,
             },
         });
+
+        setMessages((prev) => [
+            ...prev,
+            {
+                content: text,
+                sent: true,
+                timestamp: timestamp,
+            },
+        ]);
     };
 
     return { messages, history, newMessage, readyState, status };
