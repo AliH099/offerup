@@ -13,7 +13,7 @@ import { OfferDetails } from 'page-containers/OffersPageContainer/types';
 import ReceivedOffer from 'data-display/ReceivedOffer';
 import OfferReceivedSkeleton from 'skeletons/OfferReceivedSkeleton';
 import { PostDetail } from 'page-containers/ProductDetailPageContainer/types';
-import moment from 'moment-jalaali';
+import calcInterval from 'helpers/calc-interval';
 
 const OffersPage: NextPageWithLayout = () => {
     const router = useRouter();
@@ -69,7 +69,7 @@ const OffersPage: NextPageWithLayout = () => {
                         <Typography variant="body1">{detailData?.title}</Typography>
                         <Typography variant="body2">{detailData?.price}</Typography>
                         <Typography variant="caption">
-                            {moment(detailData?.updated_at).format('HH:mm jYYYY/jMM/jDD')}
+                            {detailData?.updated_at && calcInterval(detailData?.updated_at)}
                         </Typography>
                     </Stack>
                     <Image

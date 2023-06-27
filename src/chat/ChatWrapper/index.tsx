@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import ChatWrapperContainer from './styles';
-import useChat from 'chat/services';
 import { Button, TextField } from '@mui/material';
+import useChat from 'chat/services';
+import React, { useState } from 'react';
+import ChatWrapperContainer from './styles';
 
 interface ChatWrapperProps {
     children: React.ReactNode;

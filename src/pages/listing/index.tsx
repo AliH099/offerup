@@ -1,15 +1,14 @@
-import * as React from 'react';
-import { Box, Stack, Typography, Button, Divider, Paper } from '@mui/material';
-import Image from 'next/image';
-import ListingPageContainer from 'page-containers/ListingPageContainer';
-import SectionHeader from 'layout/SectionHeader';
-import { useRouter } from 'next/router';
-import { NextPageWithLayout } from 'pages/_app';
-import Link from 'next/link';
+import { Button, Divider, Paper, Stack, Typography } from '@mui/material';
+import calcInterval from 'helpers/calc-interval';
 import useFetch from 'hooks/useFetch';
-import MyPostSkeleton from 'skeletons/MyPostSkeleton';
+import SectionHeader from 'layout/SectionHeader';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import ListingPageContainer from 'page-containers/ListingPageContainer';
 import { MyPostInterface } from 'page-containers/ListingPageContainer/types';
-import moment from 'moment-jalaali';
+import { NextPageWithLayout } from 'pages/_app';
+import MyPostSkeleton from 'skeletons/MyPostSkeleton';
 
 const ListingPage: NextPageWithLayout = (props) => {
     const { data, loading } = useFetch<MyPostInterface[]>('marketplace/post/mine/', {
@@ -39,7 +38,7 @@ const ListingPage: NextPageWithLayout = (props) => {
                                 {item?.price !== null && item?.price.toLocaleString()}
                             </Typography>
                             <Typography variant="caption">
-                                {moment(item.updated_at).format('HH:mm jYYYY/jMM/jDD')}
+                                {calcInterval(item.updated_at)}
                             </Typography>
                             <Stack className="post-status">
                                 <Typography variant="body1"> وضعیت آگهی:</Typography>

@@ -1,18 +1,18 @@
 import { keyframes } from '@emotion/react';
-import { Box, DialogContent, DialogTitle, Stack, Typography } from '@mui/material';
-import { LoginWizardContext } from 'auth/LoginWizardProvider';
-import Transition from 'common/transition';
-import { Fragment, useContext, useEffect, useState } from 'react';
-import LockOpenIcon from '@mui/icons-material/LockOpen';
-import OtpInputGroup from 'auth/OtpInputGroup';
-import { LoadingButton } from '@mui/lab';
-import ResendOTPButton from 'auth/ResendOtpButton';
-import LoginOptions from 'auth/LoginOptions';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
-import httpRequest from 'helpers/http-request';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { LoadingButton } from '@mui/lab';
+import { Box, DialogContent, DialogTitle, Stack, Typography } from '@mui/material';
+import LoginOptions from 'auth/LoginOptions';
+import { LoginWizardContext } from 'auth/LoginWizardProvider';
+import OtpInputGroup from 'auth/OtpInputGroup';
+import ResendOTPButton from 'auth/ResendOtpButton';
+import Transition from 'common/transition';
 import { setToken } from 'helpers/auth';
+import httpRequest from 'helpers/http-request';
 import { decodeJWT } from 'helpers/utils';
 import useUserData from 'hooks/useUserData';
+import { useContext, useEffect, useState } from 'react';
 import OtpFormContainer from './styles';
 
 // Keyframes for PhoneNumberForm and OtpForm animation

@@ -1,7 +1,7 @@
+import { Stack, Typography } from '@mui/material';
+import calcInterval from 'helpers/calc-interval';
 import { OfferDetails } from 'page-containers/OffersPageContainer/types';
 import ReceivedOfferContainer from './styles';
-import { Stack, Typography } from '@mui/material';
-import moment from 'moment-jalaali';
 
 interface ReceivedOfferProps extends OfferDetails {
     onClick: (offerId: number, proposingUser: string) => void;
@@ -25,9 +25,7 @@ const ReceivedOffer: React.FunctionComponent<ReceivedOfferProps> = (props) => {
             <Stack className="offer-info">
                 <Stack>
                     <Typography variant="body2">{firstName + lastName + 'ali'}</Typography>
-                    <Typography variant="body2">
-                        {moment(created_at).format('HH:mm jYYYY/jMM/jDD')}
-                    </Typography>
+                    <Typography variant="body2">{calcInterval(created_at)}</Typography>
                 </Stack>
                 <Typography variant="h6">
                     {price.toLocaleString()}
