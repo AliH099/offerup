@@ -8,14 +8,13 @@ import { NextPageWithLayout } from 'pages/_app';
 import Link from 'next/link';
 import useFetch from 'hooks/useFetch';
 import MyPostSkeleton from 'skeletons/MyPostSkeleton';
-
-interface MyPostInterface {
-    slug: string;
-    post_images: { id: number; url: string; is_thumbnail: boolean }[];
-}
+import { MyPostInterface } from 'page-containers/ListingPageContainer/types';
+import moment from 'moment-jalaali';
 
 const ListingPage: NextPageWithLayout = (props) => {
-    const { data, loading } = useFetch<MyPostInterface[]>('marketplace/post/mine/');
+    const { data, loading } = useFetch<MyPostInterface[]>('marketplace/post/mine/', {
+        revalidateOnMount: true,
+    });
     const router = useRouter();
 
     return (
@@ -35,9 +34,13 @@ const ListingPage: NextPageWithLayout = (props) => {
                                 height={100}
                                 alt="image"
                             />
-                            <Typography variant="body1">آگهی شماره یک</Typography>
-                            <Typography variant="body2">27000</Typography>
-                            <Typography variant="caption"> ۷ هفته پیش</Typography>
+                            <Typography variant="body1">{item?.title}</Typography>
+                            <Typography variant="body2">
+                                {item?.price !== null && item?.price.toLocaleString()}
+                            </Typography>
+                            <Typography variant="caption">
+                                {moment(item.updated_at).format('HH:mm jYYYY/jMM/jDD')}
+                            </Typography>
                             <Stack className="post-status">
                                 <Typography variant="body1"> وضعیت آگهی:</Typography>
                                 <Typography variant="body1" color="red">
