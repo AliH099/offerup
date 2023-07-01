@@ -1,21 +1,19 @@
-import * as React from 'react';
-import { Box, Stack, Typography, Button, Divider, Paper } from '@mui/material';
-import Image from 'next/image';
-import ListingPageContainer from 'page-containers/ListingPageContainer';
-import SectionHeader from 'layout/SectionHeader';
-import { useRouter } from 'next/router';
-import { NextPageWithLayout } from 'pages/_app';
-import Link from 'next/link';
+import { Button, Divider, Paper, Stack, Typography } from '@mui/material';
+import calcInterval from 'helpers/calc-interval';
 import useFetch from 'hooks/useFetch';
+import SectionHeader from 'layout/SectionHeader';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import ListingPageContainer from 'page-containers/ListingPageContainer';
+import { MyPostInterface } from 'page-containers/ListingPageContainer/types';
+import { NextPageWithLayout } from 'pages/_app';
 import MyPostSkeleton from 'skeletons/MyPostSkeleton';
 
-interface MyPostInterface {
-    slug: string;
-    post_images: { id: number; url: string; is_thumbnail: boolean }[];
-}
-
 const ListingPage: NextPageWithLayout = (props) => {
-    const { data, loading } = useFetch<MyPostInterface[]>('marketplace/post/mine/');
+    const { data, loading } = useFetch<MyPostInterface[]>('marketplace/post/mine/', {
+        revalidateOnMount: true,
+    });
     const router = useRouter();
 
     return (
@@ -30,14 +28,18 @@ const ListingPage: NextPageWithLayout = (props) => {
                     data?.map((item, index) => (
                         <Paper className="post" variant="outlined" key={index}>
                             <Image
-                                src={item.post_images[0]?.url || '/images/test.jpg'}
+                                src={item.post_images.find((item) => item.is_thumbnail)?.url || ''}
                                 width={100}
                                 height={100}
                                 alt="image"
                             />
-                            <Typography variant="body1">آگهی شماره یک</Typography>
-                            <Typography variant="body2">27000</Typography>
-                            <Typography variant="caption"> ۷ هفته پیش</Typography>
+                            <Typography variant="body1">{item?.title}</Typography>
+                            <Typography variant="body2">
+                                {item?.price !== null && item?.price.toLocaleString()}
+                            </Typography>
+                            <Typography variant="caption">
+                                {calcInterval(item.updated_at)}
+                            </Typography>
                             <Stack className="post-status">
                                 <Typography variant="body1"> وضعیت آگهی:</Typography>
                                 <Typography variant="body1" color="red">
@@ -50,7 +52,9 @@ const ListingPage: NextPageWithLayout = (props) => {
                                 </Button>
 
                                 <Button variant="outlined" color="primary">
-                                    <Link href={`/listing/offers/${31}`}>لیست پیشنهادها</Link>
+                                    <Link href={`/listing/offers/${item.slug}`}>
+                                        لیست پیشنهادها
+                                    </Link>
                                 </Button>
                             </Stack>
                             <Divider />

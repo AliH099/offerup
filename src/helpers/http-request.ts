@@ -26,6 +26,7 @@ const httpRequest = <T>(
     hasFile: boolean = false,
     ssrToken?: string | null,
     onUpload?: (progressEvent: any) => void,
+    moreOptions?: AxiosRequestConfig,
 ): Promise<AxiosResponse<T>> => {
     const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -45,6 +46,7 @@ const httpRequest = <T>(
     let options: AxiosRequestConfig = {
         headers,
         method,
+        ...moreOptions,
     };
 
     if (params) {
@@ -59,6 +61,7 @@ const httpRequest = <T>(
 
     // Return a promise to handle errors out of function
     return new Promise<AxiosResponse<T>>((resolve, reject) => {
+        console.log(options);
         axios({
             ...options,
             url: url.startsWith('http') ? url : baseUrl + url,

@@ -1,6 +1,6 @@
+import CloseIcon from '@mui/icons-material/Close';
 import * as React from 'react';
 import Drawer from './styles';
-import CloseIcon from '@mui/icons-material/Close';
 
 interface FullScreenDrawerProps {
     open: boolean;

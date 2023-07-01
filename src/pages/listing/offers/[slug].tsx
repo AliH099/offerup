@@ -12,6 +12,8 @@ import { toast } from 'react-toastify';
 import { OfferDetails } from 'page-containers/OffersPageContainer/types';
 import ReceivedOffer from 'data-display/ReceivedOffer';
 import OfferReceivedSkeleton from 'skeletons/OfferReceivedSkeleton';
+import { PostDetail } from 'page-containers/ProductDetailPageContainer/types';
+import calcInterval from 'helpers/calc-interval';
 
 const OffersPage: NextPageWithLayout = () => {
     const router = useRouter();
@@ -21,7 +23,10 @@ const OffersPage: NextPageWithLayout = () => {
     const [loading, setLoading] = useState<boolean>(false);
 
     const { data, loading: dataLoading } = useFetch<OfferDetails[]>(
-        `marketplace/offer/received/${router.query.id}/`,
+        `marketplace/offer/received/${router.query.slug}/`,
+    );
+    const { data: detailData, loading: detailDataLoading } = useFetch<PostDetail>(
+        `marketplace/post/${router.query.slug}/`,
     );
     const onOfferTap = (offerId: number, proposingUser: string) => {
         setSelectedOfferId(offerId);
@@ -61,11 +66,18 @@ const OffersPage: NextPageWithLayout = () => {
                 <Paper variant="outlined" className="post-info">
                     <Stack gap="5px">
                         <Typography variant="caption">پیشنهادات برای:</Typography>
-                        <Typography variant="body1">آگهی شماره یک</Typography>
-                        <Typography variant="body2">27000</Typography>
-                        <Typography variant="caption"> ۷ هفته پیش</Typography>
+                        <Typography variant="body1">{detailData?.title}</Typography>
+                        <Typography variant="body2">{detailData?.price}</Typography>
+                        <Typography variant="caption">
+                            {detailData?.updated_at && calcInterval(detailData?.updated_at)}
+                        </Typography>
                     </Stack>
-                    <Image src="/images/test.jpg" width={100} height={100} alt="image" />
+                    <Image
+                        src={detailData?.post_images[0] || ''}
+                        width={100}
+                        height={100}
+                        alt="image"
+                    />
                 </Paper>
                 {dataLoading ? (
                     [...Array(7)].map(() => <OfferReceivedSkeleton />)

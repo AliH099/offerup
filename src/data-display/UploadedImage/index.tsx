@@ -1,11 +1,12 @@
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Image from 'next/image';
 import UploadedImageContainer, { RemoveButton } from './styles';
 import httpRequest, { catchRequestError } from 'helpers/http-request';
 import { useEffect, useState } from 'react';
 import LinearProgress from '@mui/material/LinearProgress';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import axios, { CancelTokenSource } from 'axios';
+import { toast } from 'react-toastify';
 
 interface UploadedImageProps {
     id: number;
@@ -21,6 +22,7 @@ const UploadedImage: React.FunctionComponent<UploadedImageProps> = (props) => {
     const [complete, setComplete] = useState(false);
     const [progress, setProgress] = useState<number>(0);
     const [imagePk, setImagePk] = useState<number | undefined>();
+    const [cancelToken] = useState<CancelTokenSource>(axios.CancelToken.source());
 
     const handleProgressBar = (progressEvent: any) => {
         setProgress((progressEvent.loaded / progressEvent.total) * 90);
@@ -38,6 +40,7 @@ const UploadedImage: React.FunctionComponent<UploadedImageProps> = (props) => {
             true,
             undefined,
             handleProgressBar,
+            { cancelToken: cancelToken.token },
         )
             .then((res) => {
                 setComplete(true);
@@ -64,6 +67,12 @@ const UploadedImage: React.FunctionComponent<UploadedImageProps> = (props) => {
             });
     };
 
+    const cancelUploading = () => {
+        toast.error('بارگذاری عکس مورد نظر لغو شد');
+        cancelToken.cancel('cancel-request');
+        props.onRemoveImage(props.id);
+    };
+
     return (
         <UploadedImageContainer>
             {deleteLoading ? (
@@ -73,7 +82,9 @@ const UploadedImage: React.FunctionComponent<UploadedImageProps> = (props) => {
                     <DeleteIcon className="remove-icon" />
                 </RemoveButton>
             )}
-
+            <Button variant="contained" className="cancel" onClick={cancelUploading}>
+                لغو
+            </Button>
             <Image
                 height={170}
                 width={170}

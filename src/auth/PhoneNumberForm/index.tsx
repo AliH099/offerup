@@ -1,15 +1,15 @@
-import PhoneNumberFormContainer from './styles';
-import TextInput from 'inputs/TextInput';
-import { Typography } from '@mui/material';
-import Transition from 'common/transition';
-import { useContext, useState } from 'react';
-import { LoginWizardContext } from 'auth/LoginWizardProvider';
-import { BlurFade } from 'auth/OtpForm';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
-import httpRequest, { catchRequestError } from 'helpers/http-request';
+import { Typography } from '@mui/material';
+import { LoginWizardContext } from 'auth/LoginWizardProvider';
+import { BlurFade } from 'auth/OtpForm';
+import Transition from 'common/transition';
+import httpRequest from 'helpers/http-request';
+import TextInput from 'inputs/TextInput';
+import { useContext, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import PhoneNumberFormContainer from './styles';
 
 const validationSchema = yup.object({
     phone: yup

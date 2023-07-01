@@ -1,21 +1,17 @@
-import BottomMainMenu from 'inputs/BottomMainMenu';
-import TextInput from 'inputs/TextInput';
-import SiteLayout from 'layout/SiteLayout';
-import HomePageContainer from 'page-containers/HomePageContainer';
+import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import { Grid, Stack } from '@mui/material';
 import Post from 'data-display/Post';
-import Link from 'next/link';
-import { Form, useForm } from 'react-hook-form';
-import { serverSideFetch } from 'helpers/http-request';
-import { GetServerSidePropsContext } from 'next';
-import { NextPageWithLayout } from './_app';
-import useQueryParam from 'hooks/useQueryParam';
 import useFetch from 'hooks/useFetch';
-import CloseIcon from '@mui/icons-material/Close';
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
+import useQueryParam from 'hooks/useQueryParam';
+import BottomMainMenu from 'inputs/BottomMainMenu';
+import TextInput from 'inputs/TextInput';
+import SiteLayout from 'layout/SiteLayout';
+import Link from 'next/link';
+import HomePageContainer from 'page-containers/HomePageContainer';
+import { useForm } from 'react-hook-form';
 import Skeleton from 'skeletons/Skeleton';
+import { NextPageWithLayout } from './_app';
 
 interface HomeProps {}
 
