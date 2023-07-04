@@ -81,7 +81,7 @@ const ProductDetail: NextPageWithLayout<ProductDetailProps> = (props) => {
                     </Stack>
                 ))}
             </Stack>
-            <ProductAction postID={id} />
+            <ProductAction postID={id} chatID={props.details.chat_id} />
         </ProductDetailPageContainer>
     );
 };

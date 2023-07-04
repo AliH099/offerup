@@ -1,4 +1,6 @@
 import httpRequest from 'helpers/http-request';
+import { useCounter } from 'hooks/useCounter';
+import { useToggle } from 'hooks/useToggle';
 import { useEffect, useState } from 'react';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 
@@ -15,7 +17,8 @@ type ChatUserInfo = {
     requested_user_id: string;
 };
 
-type Message = {
+export type Message = {
+    id?: number;
     content: string;
     sent: boolean;
     timestamp: string;
@@ -23,11 +26,15 @@ type Message = {
 
 const url = String(process.env.NEXT_PUBLIC_CHAT_WS_URL);
 
-const useChat = (phone: string) => {
+const useChat = (chatID: string) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [history, setHistory] = useState<{ [key: string]: any }[]>([]);
     const [userID, setUserID] = useState<string>();
+    const [messageQueue, setMessageQueue] = useState<Message[]>([]);
     const [status, setStatus] = useState<string>(connectionStatus[ReadyState.CLOSED]);
+    const { count, increment } = useCounter(4);
+    const [newMessageToggle, toggle] = useToggle(false);
+
     const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(url, {
         onMessage: (event) => {
             const msg = JSON.parse(event.data);
@@ -39,30 +46,10 @@ const useChat = (phone: string) => {
                         ...prev,
                         {
                             content: msg.data.content,
-                            sent: false,
+                            sent: msg.data.topic === userID,
                             timestamp: msg.data.ts,
                         },
                     ]);
-                    break;
-                case 'meta':
-                    sendJsonMessage({
-                        sub: {
-                            id: Date.now().toString(),
-                            topic: userID,
-                            get: {
-                                data: {
-                                    limit: 24,
-                                },
-                                sub: {
-                                    ims: new Date().toISOString(),
-                                },
-                                desc: {
-                                    ims: new Date().toISOString(),
-                                },
-                                what: 'data sub desc del',
-                            },
-                        },
-                    });
                     break;
             }
         },
@@ -73,40 +60,41 @@ const useChat = (phone: string) => {
     }, [messages]);
 
     useEffect(() => {
+        increment();
+    }, [newMessageToggle]);
+
+    useEffect(() => {
         setStatus(connectionStatus[readyState]);
     }, [readyState]);
 
     useEffect(() => {
-        httpRequest<ChatUserInfo>('account/chat/', 'POST', { phone_number: phone }).then((res) => {
+        httpRequest<ChatUserInfo>('account/chat/', 'POST', { chat_id: chatID }).then((res) => {
             setUserID(res.data.requested_user_id);
             hi();
             login(res.data.token);
             subscribe();
+            fetchMessages(res.data.requested_user_id);
         });
     }, []);
 
     useEffect(() => {
-        if (lastJsonMessage !== null) {
-            setHistory((prev) => prev.concat(lastJsonMessage));
+        const msg = lastJsonMessage as any;
+        if (lastJsonMessage !== null && msg.ctrl) {
+            const message = messageQueue.find((item) => item.id === Number(msg.ctrl.id));
+
+            if (message) {
+                setMessageQueue((prev) => prev.filter((item) => item.id !== Number(msg.ctrl.id)));
+                setMessages((prev) => [...prev, message]);
+                readMessage(msg.ctrl.params.seq)
+                recieveMessage(msg.ctrl.params.seq)
+            }
         }
     }, [lastJsonMessage, setHistory]);
-
-    const subscribe = () => {
-        sendJsonMessage({
-            sub: {
-                id: Date.now().toString(),
-                topic: 'me',
-                get: {
-                    what: 'sub desc tags cred',
-                },
-            },
-        });
-    };
 
     const hi = () => {
         sendJsonMessage({
             hi: {
-                id: Date.now().toString(),
+                id: '1',
                 ver: String(process.env.NEXT_PUBLIC_CHAT_VERSION),
             },
         });
@@ -115,9 +103,42 @@ const useChat = (phone: string) => {
     const login = (token: string) => {
         sendJsonMessage({
             login: {
-                id: Date.now().toString(),
+                id: '2',
                 scheme: 'token',
                 secret: token,
+            },
+        });
+    };
+
+    const subscribe = () => {
+        sendJsonMessage({
+            sub: {
+                id: '3',
+                topic: 'me',
+                get: {
+                    what: 'sub desc tags cred',
+                },
+            },
+        });
+    };
+
+    const fetchMessages = (userID: string) => {
+        sendJsonMessage({
+            sub: {
+                id: '4',
+                topic: userID,
+                get: {
+                    data: {
+                        limit: 24,
+                    },
+                    sub: {
+                        ims: new Date().toISOString(),
+                    },
+                    desc: {
+                        ims: new Date().toISOString(),
+                    },
+                    what: 'data sub desc del',
+                },
             },
         });
     };
@@ -125,23 +146,44 @@ const useChat = (phone: string) => {
     const newMessage = (text: string) => {
         const timestamp = new Date().toISOString();
 
+        toggle();
         sendJsonMessage({
             pub: {
-                id: Date.now().toString(),
+                id: String(count),
                 topic: userID,
                 noecho: true,
                 content: text,
             },
         });
-
-        setMessages((prev) => [
+        setMessageQueue((prev) => [
             ...prev,
             {
+                id: count,
                 content: text,
                 sent: true,
                 timestamp: timestamp,
             },
         ]);
+    };
+
+    const readMessage = (seq: number) => {
+        sendJsonMessage({
+            note: {
+                topic: userID,
+                what: 'read',
+                seq: seq,
+            },
+        });
+    };
+
+    const recieveMessage = (seq: number) => {
+        sendJsonMessage({
+            note: {
+                topic: userID,
+                what: 'recv',
+                seq: seq,
+            },
+        });
     };
 
     return { messages, history, newMessage, readyState, status };

@@ -2,6 +2,7 @@ export type PostDetail = {
     id: number;
     category: string;
     user: string;
+    chat_id: string;
     title: string;
     description: string;
     price: number;

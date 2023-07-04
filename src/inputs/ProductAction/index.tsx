@@ -38,7 +38,7 @@ const ProductAction: React.FC<ProductActionProps> = (props) => {
             </FullScreenDrawer>
 
             <FullScreenDrawer open={openChat} setOpen={setOpenChat}>
-                <ChatWrapper phone="09187004197">
+                <ChatWrapper chatID={props.chatID}>
                     <Typography>hello</Typography>
                 </ChatWrapper>
             </FullScreenDrawer>

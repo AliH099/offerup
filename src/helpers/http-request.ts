@@ -61,7 +61,6 @@ const httpRequest = <T>(
 
     // Return a promise to handle errors out of function
     return new Promise<AxiosResponse<T>>((resolve, reject) => {
-        console.log(options);
         axios({
             ...options,
             url: url.startsWith('http') ? url : baseUrl + url,

@@ -1,20 +1,23 @@
-import { Button, TextField } from '@mui/material';
+import { IconButton, Stack, TextField } from '@mui/material';
 import useChat from 'chat/services';
 import React, { useState } from 'react';
 import ChatWrapperContainer from './styles';
+import SendIcon from '@mui/icons-material/Send';
+import { Conversation } from 'chat/Conversation';
 
 interface ChatWrapperProps {
     children: React.ReactNode;
-    phone: string;
+    chatID: string;
 }
 
 const ChatWrapper: React.FC<ChatWrapperProps> = (props) => {
-    const { messages, newMessage } = useChat(props.phone);
+    const { messages, newMessage } = useChat(props.chatID);
     const [value, setValue] = useState<string>();
 
     const onClickSend = () => {
         if (value) {
             newMessage(value);
+            setValue("");
         } else {
             return;
         }
@@ -22,10 +25,20 @@ const ChatWrapper: React.FC<ChatWrapperProps> = (props) => {
 
     return (
         <ChatWrapperContainer>
-            <TextField value={value} onChange={(e) => setValue(e.target.value)} />
-            <Button variant="contained" onClick={onClickSend}>
-                Send
-            </Button>
+            <Stack rowGap="20px">
+                <Conversation messages={messages} />
+                <Stack direction="row" columnGap="10px">
+                    <IconButton onClick={onClickSend} aria-label="send" color="primary">
+                        <SendIcon />
+                    </IconButton>
+                    <TextField
+                        fullWidth
+                        size="small"
+                        value={value}
+                        onChange={(e) => setValue(e.target.value)}
+                    />
+                </Stack>
+            </Stack>
         </ChatWrapperContainer>
     );
 };
