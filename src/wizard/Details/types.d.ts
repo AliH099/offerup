@@ -15,11 +15,13 @@ type Categories = {
 };
 
 export interface CategorySchema {
-    fields: {
-        en_label: string;
-        fa_label: string;
-        type: string;
-        is_required: boolean;
-    }[];
+    fields: MetaDataFieldSchema[];
     conditions: string[];
+}
+
+export interface MetaDataFieldSchema {
+    en_label: string;
+    fa_label: string;
+    type: string;
+    is_required: boolean;
 }
