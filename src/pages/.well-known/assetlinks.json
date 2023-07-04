@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.netlify.development__gentle_macaron_e97619.twa",
+        "sha256_cert_fingerprints": ["53:7F:39:9C:A4:32:39:54:26:4E:2B:39:39:77:E7:96:5F:BA:CA:D7:9D:08:BE:28:01:B2:61:05:DE:77:8F:06"]
+      }
+    }]
