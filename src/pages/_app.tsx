@@ -7,6 +7,7 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import createEmotionCache from 'helpers/emotionCache';
 import theme from 'theme';
 import { ToastContainer } from 'react-toastify';
+import Head from 'next/head';
 
 export type NextPageWithLayout<T = any> = NextPage<T> & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -26,6 +27,9 @@ export default function App(props: AppProps) {
     return (
         <CacheProvider value={emotionCache}>
             <ThemeProvider theme={theme}>
+                <Head>
+                    <link rel="manifest" href="/manifest.json" />
+                </Head>
                 <CssBaseline />
                 <div dir="rtl">{getLayout(<Component {...pageProps} />)}</div>
                 <ToastContainer

@@ -68,9 +68,11 @@ const UploadedImage: React.FunctionComponent<UploadedImageProps> = (props) => {
     };
 
     const cancelUploading = () => {
-        toast.error('بارگذاری عکس مورد نظر لغو شد');
-        cancelToken.cancel('cancel-request');
-        props.onRemoveImage(props.id);
+        if (!complete) {
+            toast.error('بارگذاری عکس مورد نظر لغو شد');
+            cancelToken.cancel('cancel-request');
+            props.onRemoveImage(props.id);
+        }
     };
 
     return (
@@ -82,9 +84,11 @@ const UploadedImage: React.FunctionComponent<UploadedImageProps> = (props) => {
                     <DeleteIcon className="remove-icon" />
                 </RemoveButton>
             )}
-            <Button variant="contained" className="cancel" onClick={cancelUploading}>
-                لغو
-            </Button>
+            {!complete && (
+                <Button variant="contained" className="cancel" onClick={cancelUploading}>
+                    لغو
+                </Button>
+            )}
             <Image
                 height={170}
                 width={170}
